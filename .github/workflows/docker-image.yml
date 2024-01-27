@@ -1,0 +1,29 @@
+name: Docker Image CI
+
+on:
+  push:
+    paths:
+      - .github/workflows/docker-image.yml
+      - Dockerfile
+    branches: [ master ]
+  pull_request:
+    paths:
+      - .github/workflows/docker-image.yml
+      - Dockerfile
+    branches: [ master ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - uses: actions/checkout@v2
+      - name: Build the Docker image
+        run: docker build . --file Dockerfile --tag heroyt/lac-event-server:latest --tag heroyt/lac-event-server:$(date +%s) && docker push heroyt/lac-event-server -a
