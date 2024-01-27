@@ -26,4 +26,8 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - uses: actions/checkout@v2
       - name: Build the Docker image
-        run: docker build . --file Dockerfile --tag heroyt/lac-event-server:latest --tag heroyt/lac-event-server:$(date +%s) && docker push heroyt/lac-event-server -a
+        run: docker build . --file Dockerfile --platform linux/amd64 --tag heroyt/lac-event-server:latest --tag heroyt/lac-event-server:$(date +%s)
+      - name: Build the Docker image arm
+        run: docker build . --file Dockerfile --platform linux/arm64 --tag heroyt/lac-event-server:latest --tag heroyt/lac-event-server:$(date +%s)
+      - name: Push the Docker images
+        run: docker push heroyt/lac-event-server -a
