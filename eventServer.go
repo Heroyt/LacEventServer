@@ -20,7 +20,14 @@ func main() {
 	ch := sub.Channel()
 	defer sub.Close()
 
-	es := eventsource.New(nil, nil)
+	es := eventsource.New(
+		eventsource.DefaultSettings(),
+		func(req *http.Request) [][]byte {
+			return [][]byte{
+				[]byte("Access-Control-Allow-Origin: *"),
+			}
+		},
+	)
 	defer es.Close()
 	http.Handle("/events", es)
 
