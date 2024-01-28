@@ -24,6 +24,7 @@ func main() {
 		eventsource.DefaultSettings(),
 		func(req *http.Request) [][]byte {
 			return [][]byte{
+				[]byte("Cache-Control: no-store"),
 				[]byte("Access-Control-Allow-Origin: *"),
 			}
 		},
@@ -36,14 +37,14 @@ func main() {
 		fmt.Println("Waiting for messages")
 		for msg := range ch {
 			fmt.Println(msg.Payload)
-			es.SendEventMessage(msg.Payload, "event-channel", strconv.Itoa(id))
+			es.SendEventMessage(msg.Payload, "event", strconv.Itoa(id))
 			id++
 
 			messages := redis.XRevRangeN(ctx, msg.Payload, "+", "-", 1).Val()
 
 			for _, message := range messages {
 				fmt.Println(message.Values["message"])
-				es.SendEventMessage(fmt.Sprintf("%v", message.Values["message"]), "event-message", strconv.Itoa(id))
+				es.SendEventMessage(fmt.Sprintf("%v", message.Values["message"]), "data", strconv.Itoa(id))
 				id++
 			}
 		}
