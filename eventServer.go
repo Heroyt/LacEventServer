@@ -24,8 +24,10 @@ func main() {
 		eventsource.DefaultSettings(),
 		func(req *http.Request) [][]byte {
 			return [][]byte{
-				[]byte("Cache-Control: no-store"),
+				[]byte("Connection: keep-alive"),
+				[]byte("Cache-Control: no-cache"),
 				[]byte("Access-Control-Allow-Origin: *"),
+				[]byte("Access-Control-Allow-Methods: GET, POST, OPTIONS"),
 			}
 		},
 	)
