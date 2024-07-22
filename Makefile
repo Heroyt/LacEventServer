@@ -1,5 +1,8 @@
 DATE=$(shell date +%s)
 
+docker:
+	docker buildx build --platform linux/arm64,linux/amd64 . --file Dockerfile --tag heroyt/lac-event-server:latest --tag heroyt/lac-event-server:${DATE} --push
+
 docker-build:
 	docker build . --file Dockerfile --tag heroyt/lac-event-server:latest --tag heroyt/lac-event-server:${DATE}
 
